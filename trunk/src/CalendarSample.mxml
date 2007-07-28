@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	layout="vertical" xmlns:cal="com.hevery.cal.*" 
+	backgroundGradientAlphas="[1.0, 1.0]" 
+	backgroundGradientColors="[#FFFFFF, #FFFFFF]" 
+	xmlns:decoration="com.hevery.cal.decoration.*"
+	creationComplete="init()" xmlns:view="com.hevery.cal.view.*">
+	<mx:Script>
+		<![CDATA[
+			import com.hevery.TextAreaLineFormatedTarget;
+			import mx.logging.LogEventLevel;
+			import mx.logging.LogLogger;
+			import mx.logging.targets.TraceTarget;
+			import mx.logging.Log;
+			import com.hevery.cal.view.AgendaViewRenderer;
+			import com.hevery.cal.view.DayViewRenderer;
+			import com.hevery.cal.view.TimelineViewRenderer;
+			import com.hevery.cal.CalendarDescriptor;
+			import com.hevery.calsample.RandomCalendarGenerator;
+			import com.hevery.calsample.SampleCalendarDescriptor;
+			import mx.collections.ArrayCollection;
+		
+			[Bindable]
+			private var views: ArrayCollection = new ArrayCollection(["Timeline", "Day", "Week", "Month", "Agenda"]);
+			[Bindable]
+			private var calendarDescriptor:CalendarDescriptor = new SampleCalendarDescriptor();
+			[Bindable]
+			private var generator:RandomCalendarGenerator = new RandomCalendarGenerator();
+			[Bindable]
+			private var events:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			private var calendars:ArrayCollection = new ArrayCollection();
+			
+			private function init():void {
+				var target:TextAreaLineFormatedTarget = new TextAreaLineFormatedTarget();
+				target.textArea = logTextArea;
+				target.level = LogEventLevel.ALL;
+				target.includeLevel = true;
+				target.includeCategory = true;
+				target.includeTime = true;
+				target.filters = ["*"];
+				Log.addTarget(target);
+				
+				generator.generate();
+				events = generator.events;
+				for each (var event:* in events) {
+					if (!calendars.contains(event.calendar)) {
+						calendars.addItem(event.calendar);
+					}
+				}
+			}
+		]]>
+	</mx:Script>
+	<mx:Style source="com/hevery/cal/calendar.css"/>
+	<cal:Calendar width="100%" height="100%" 
+		calendarDescriptor="{calendarDescriptor}"
+		calendars="{calendars}"
+		events="{events}"/>
+	<mx:TextArea width="100%" height="100" id="logTextArea"/>
+</mx:Application>

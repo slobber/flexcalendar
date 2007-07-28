@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Copyright 2007
+Author: Misko Hevery <misko@hevery.com>
+-->
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:utils="flash.utils.*"
+	creationComplete="init()">
+	<mx:Script>
+		<![CDATA[
+			import mx.events.SliderEvent;
+			import mx.controls.sliderClasses.Slider;
+		
+			[Bindable]
+			public var selectedTime:Date = new Date();
+			[Bindable]
+			public var scrollSize:Number = DateUtil.DAY;
+			
+			private var timer:Timer = new Timer(100);
+			private var lastTick:Number;
+			private var isThumDragging:Boolean = false;
+			
+			private function init():void {
+				timer.addEventListener(TimerEvent.TIMER, onTimerTick);
+			}
+			
+			private function onTimerTick(event:TimerEvent):void {
+				var now:Number = new Date().time;
+				var elapsedTime:Number = (now - lastTick) / 1000.0;
+				selectedTime = new Date(selectedTime.time + slider.value * elapsedTime);
+				lastTick = now;
+			}
+			
+			private function onThumbPress(slider:Slider):void {
+				isThumDragging = true;
+				lastTick = new Date().time;
+				timer.start();
+			}
+			
+			private function onThumbRelease(slider:Slider):void {
+				timer.stop();
+				slider.value = 0;
+				isThumDragging = false;
+			}
+			
+			private function onChange(slider:Slider):void {
+				if (!isThumDragging) {
+					selectedTime = new Date(selectedTime.time + slider.value);
+					slider.value = 0;
+				}
+			}
+		]]>
+	</mx:Script>
+	<mx:HSlider id="slider" width="100%"
+		thumbPress="onThumbPress(event.currentTarget as Slider)"
+		thumbRelease="onThumbRelease(event.currentTarget as Slider)"
+		change="onChange(event.currentTarget as Slider)"
+		minimum="{-scrollSize}" maximum="{scrollSize}" value="0"
+		showDataTip="false"
+		labels="['Past', 'Now' , 'Future']" liveDragging="true"
+		/>
+</mx:HBox>

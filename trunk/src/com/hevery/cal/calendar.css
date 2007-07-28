@@ -1,0 +1,10 @@
+.Timeline {
+   calendarLabelWidth: 150;
+   calendarRowHeight: 200;
+}
+
+.CalendarEvent {
+   headerHeight: 16;
+   cornerRadius: 8;
+   borderThickness: 2;
+}

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Copyright 2007
+Author: Misko Hevery <misko@hevery.com>
+-->
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" xmlns:cal="com.hevery.cal.*">
+	<mx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			public var calendarDescriptor:CalendarDescriptor = new NullCalendarDescriptor();
+			[Bindable]
+			public var calendars:ArrayCollection = new ArrayCollection();
+			[Bindable]
+			public var events:ArrayCollection = new ArrayCollection();
+		]]>
+	</mx:Script>
+	<mx:TabNavigator width="100%" height="100%">
+		<cal:TimelineView width="100%" height="100%"
+			calendarDescriptor="{calendarDescriptor}"
+			events="{events}" calendars="{calendars}"/>
+		<cal:DayView width="100%" height="100%"
+			calendarDescriptor="{calendarDescriptor}"
+			events="{events}" calendars="{calendars}"/>
+		<cal:WeekView width="100%" height="100%"
+			calendarDescriptor="{calendarDescriptor}"
+			events="{events}" calendars="{calendars}"/>
+		<cal:MonthView width="100%" height="100%"
+			calendarDescriptor="{calendarDescriptor}"
+			events="{events}" calendars="{calendars}"/>
+		<cal:AgendaView width="100%" height="100%"
+			calendarDescriptor="{calendarDescriptor}"
+			events="{events}" calendars="{calendars}"/>
+	</mx:TabNavigator>
+</mx:VBox>
