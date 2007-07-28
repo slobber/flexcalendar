@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project name="ant-googlecode" default="upload">
+	
+	<property file="build.properties"/>
+	
+	<!-- Google Code upload properties that vary from person to person.
+	     These should be set in build.properties, which is not checked
+	     in to the source code repository.
+	     
+	     The build.properties.example file provides a template for setting
+	     your own properties.  Make a copy called build.properties and
+	     edit that. This build script will then pick up those properties,
+	     which will not be committed with the rest of the files (which
+	     means you won't be committing your password into the repository!)
+	  -->
+	<property name="gc.username" value="username not set"/>
+	<property name="gc.password" value="password not set"/>
+
+	<target name="upload" description="Upload the distribution to google code">
+		<taskdef classname="net.bluecow.googlecode.ant.GoogleCodeUploadTask" classpath="lib/ant-googlecode-0.0.0.jar" name="gcupload"/>
+		<gcupload username="${gc.username}" password="${gc.password}"
+		          projectname="flexcalendar"
+			      filename="bin/galery.swf"
+			      targetfilename="galery.swf"
+				  summary="galery.swf" />
+	</target>
+</project>
