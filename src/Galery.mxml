@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal" 
+	xmlns:decoration="com.hevery.cal.decoration.*" xmlns:text="flash.text.*" 
+	xmlns:cal="com.hevery.cal.*" xmlns:calsample="com.hevery.calsample.*"
+	creationComplete="init()" xmlns:event="com.hevery.cal.event.*" xmlns:view="com.hevery.cal.view.*">
+	<mx:Style source="com/hevery/cal/calendar.css"/>
+	
+	<calsample:Calendar id="calendar1" color="{0x006600}"/>
+	<calsample:Event id="event" what="{titleField.text}" description="{textField.text}" calendar="{calendar1}" where="here"
+			start="{DateUtil.trimToDay(new Date())}" end="{new Date(event.start.time + 3 * DateUtil.HOUR)}"/>
+	<calsample:SampleCalendarDescriptor id="calDescriptor"/>
+	<mx:ArrayCollection id="events"/>
+	<mx:ArrayCollection id="calendars"/>
+	<mx:Script>
+		<![CDATA[
+			import com.hevery.calsample.RandomCalendarGenerator;
+			import com.hevery.cal.view.TimelineViewRenderer;
+			import com.hevery.cal.view.AgendaViewRenderer;
+			import com.hevery.cal.view.MonthViewRenderer;
+			import com.hevery.cal.event.AgendaEventRenderer;
+			import com.hevery.cal.event.CompactEventRenderer;
+			import com.hevery.cal.DateUtil;
+			
+			import mx.collections.ArrayCollection;
+			
+			private function get eventStyle():CSSStyleDeclaration {
+				return StyleManager.getStyleDeclaration(".CalendarEvent"); 
+			}
+			
+			private function init():void {
+				var generator:RandomCalendarGenerator = new RandomCalendarGenerator();
+				generator.generate();
+				calendars = generator.calendars;
+				events = generator.events;
+			}
+		]]>
+	</mx:Script>
+	
+	<decoration:VerticalTimeRuler height="{height - 100}"/>
+	<mx:Tile width="100%" height="100%">
+		<mx:VBox id="eventBox">
+			<event:CalendarEvent width="100%" height="100" eventData="{event}" calendarDescriptor="{calDescriptor}"/>
+			<event:CalendarEvent width="100%" eventData="{event}" calendarDescriptor="{calDescriptor}" rendererFactory="{CompactEventRenderer}"/>
+			<event:CalendarEvent width="100%" eventData="{event}" calendarDescriptor="{calDescriptor}" rendererFactory="{AgendaEventRenderer}"/>
+			<mx:VBox>
+				<mx:TextInput id="titleField" text="Title"/>
+				<mx:TextArea id="textField" text="A long description of the event goes here."/>
+				<mx:HSlider maximum="30" value="15" change="eventStyle.setStyle('headerHeight', event.currentTarget.value)" liveDragging="true"/>
+				<mx:HSlider maximum="30" value="8" change="eventStyle.setStyle('cornerRadius', event.currentTarget.value)" liveDragging="true"/>
+				<mx:HSlider maximum="30" value="2" change="eventStyle.setStyle('borderThickness', event.currentTarget.value)" liveDragging="true"/>
+			</mx:VBox>
+		</mx:VBox>
+		<mx:HBox width="200" height="{eventBox.height}">
+			<view:CalendarView width="100%" height="{40 * 24}"
+				date="{DateUtil.trimToDay(new Date())}"
+				calendarDescriptor="{calDescriptor}" events="{events}" calendars="{calendars}"/>
+		</mx:HBox>
+		<view:CalendarView width="100%" height="100%"
+			date="{DateUtil.trimToDay(new Date())}"
+			rendererFactory="{AgendaViewRenderer}"
+			calendarDescriptor="{calDescriptor}" events="{events}" calendars="{calendars}"/>
+		<mx:VBox width="100%" height="100%">
+			<mx:HBox width="100%">
+				<view:CalendarView  width="100%"
+					date="{timeSlider.selectedTime}" 
+					rendererFactory="{TimelineViewRenderer}"
+					calendarDescriptor="{calDescriptor}" events="{events}" calendars="{calendars}"
+					duration="{timeSliderDuration.value}"/>
+			</mx:HBox>
+			<mx:Label text="{timeSlider.selectedTime.toUTCString()}"/>
+			<cal:TimelineSlider id="timeSlider" width="100%" height="100%"
+				selectedTime="{DateUtil.trimToDay(new Date())}"/>
+			<cal:TimelineDurationSlider width="100%" id="timeSliderDuration"/>
+		</mx:VBox>
+		<view:CalendarView  width="100%" height="100%"
+			date="{DateUtil.trimToDay(new Date())}" 
+			rendererFactory="{MonthViewRenderer}"
+			calendarDescriptor="{calDescriptor}" events="{events}" calendars="{calendars}"/>
+	</mx:Tile>
+</mx:Application>

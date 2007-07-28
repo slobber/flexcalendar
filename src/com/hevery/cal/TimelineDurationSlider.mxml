@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+Copyright 2007
+Author: Misko Hevery <misko@hevery.com>
+-->
+<mx:HBox xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="onScaleChange(timeWidthSlider.value)">
+	<mx:Script>
+		<![CDATA[
+			import com.hevery.cal.DateUtil;
+
+			[Bindable]
+			public var value:Number = DateUtil.HOUR;
+
+			private function onScaleChange(value:Number):Number {
+				if (value < 1)
+					return DateUtil.HOUR + (DateUtil.DAY - DateUtil.HOUR) * value
+				value -= 1;
+				if (value < 1)
+					return DateUtil.DAY + (DateUtil.WEEK - DateUtil.DAY) * value
+				value -= 1;
+				return DateUtil.WEEK + (DateUtil.MONTH - DateUtil.WEEK) * value
+			}
+		]]>
+	</mx:Script>
+	<mx:Binding destination="value" source="onScaleChange(timeWidthSlider.value)" />
+	<mx:HSlider id="timeWidthSlider" width="100%" 
+		labels="['Hour', 'Day', 'Week', 'Month']" liveDragging="true" 
+		minimum="0" maximum="3" value="1" showDataTip="false"/>
+</mx:HBox>
