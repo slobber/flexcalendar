@@ -16,6 +16,10 @@ package com.hevery.cal
 			return new Date(date.fullYear, date.month, date.date);
 		}
 		
+		public static function trimToHour(date:Date):Date {
+			return new Date(date.fullYear, date.month, date.date, date.hours);
+		}
+		
 		public static function timeBlocksOverlap(start1:Date, end1:Date, start2:Date, end2:Date):Boolean {
 			if (start1 == null || start2 == null || end1 == null || end2 == null)
 				return false;

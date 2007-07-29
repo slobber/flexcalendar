@@ -15,7 +15,7 @@ Author: Misko Hevery <misko@hevery.com>
 			[Bindable]
 			public var scrollSize:Number = DateUtil.DAY;
 			
-			private var timer:Timer = new Timer(100);
+			private var timer:Timer = new Timer(10);
 			private var lastTick:Number;
 			private var isThumDragging:Boolean = false;
 			

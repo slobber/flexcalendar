@@ -8,6 +8,8 @@ package com.hevery.cal.view
 	import com.hevery.cal.UIProperty;
 	import com.hevery.cal.event.CalendarEvent;
 	
+	import flash.utils.Dictionary;
+	
 	import mx.collections.ArrayCollection;
 	import mx.core.ClassFactory;
 	import mx.core.FlexSprite;
@@ -16,11 +18,10 @@ package com.hevery.cal.view
 	import mx.events.CollectionEvent;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
-
-	import flash.utils.getTimer;
 	
 	[Event(name="selectDay", type="com.hevery.cal.SelectDay")]
 	[Event(name="chooseDay", type="com.hevery.cal.ChooseDay")]
+	[Bindable]
 	public class CalendarView extends UIComponent
 	{
 		
@@ -91,7 +92,7 @@ package com.hevery.cal.view
 		
 		public function get endDate():Date { return new Date(date.time + duration); } 
 
-		private var visibleEvents:ArrayCollection = new ArrayCollection();
+		private var visibleEvents:Dictionary = new Dictionary();
 		
 		protected override function commitProperties():void {
 			if (_durationChanged) {
@@ -103,12 +104,14 @@ package com.hevery.cal.view
 				_calendarDescriptorChanged = false;
 				_eventsChanged = true;
 			}
+			if (_dateChanged) {
+				_dateChanged = false;
+				_eventsChanged = true;
+				invalidateDisplayList();
+			}
 			if (_eventsChanged) {
 				_eventsChanged = false;
 				eventsChanged();
-			}
-			if (_dateChanged) {
-				_dateChanged = false;
 			}
 		}
 		
@@ -118,7 +121,8 @@ package com.hevery.cal.view
 			var addChildTime:Number = 0;
 			var dayStart:Date = date;
 			var dayEnds:Date = new Date(date.time + duration);
-			var newVisibleEvents:ArrayCollection = new ArrayCollection();
+			var newVisibleEvents:Dictionary = new Dictionary();
+			var eventList:ArrayCollection = new ArrayCollection();
 			for each (var event:* in events) {
 				var eventStart:Date = _calendarDescriptor.getEventStart(event);
 				var eventEnd:Date = _calendarDescriptor.getEventEnd(event);
@@ -128,10 +132,9 @@ package com.hevery.cal.view
 				if (!calendars.contains(calendar))
 					continue;
 					
-				var eventUI:CalendarEvent;
-				if (visibleEvents.length > 0) {
-					eventUI = visibleEvents.removeItemAt(0) as CalendarEvent;
-				} else {
+				var eventUI:CalendarEvent = visibleEvents[event];
+				delete visibleEvents[event];
+				if (eventUI == null) {
 					var startNew:Number = flash.utils.getTimer();
 					eventUI = new CalendarEvent();
 					newCalendarEventTime += flash.utils.getTimer() - startNew;
@@ -139,7 +142,8 @@ package com.hevery.cal.view
 					addChild(eventUI);
 					addChildTime += flash.utils.getTimer() - startAddChild;
 				}
-				newVisibleEvents.addItem(eventUI);
+				newVisibleEvents[event] = eventUI;
+				eventList.addItem(eventUI);
 				eventUI.calendarDescriptor = _calendarDescriptor;
 				eventUI.eventData = event;
 			}
@@ -150,7 +154,7 @@ package com.hevery.cal.view
 			}
 			
 			visibleEvents = newVisibleEvents;
-			invalidateDisplayList();
+			_renderer.layoutEvents(eventList);
 			var end:Number = flash.utils.getTimer();
 			log.info("eventsChanged time= {0} ms.; new CalendarEvent time= {1} ms.; addchild time={2} ms.", end - start, newCalendarEventTime, addChildTime);
 		}
@@ -166,7 +170,6 @@ package com.hevery.cal.view
 			
 			graphics.clear();
 			
-			_renderer.layoutEvents(visibleEvents);
 			_renderer.drawBackground(graphics, width, height, 0);
 			_renderer.updateDisplayList(graphics, width, height);
 			var end:Number = flash.utils.getTimer();

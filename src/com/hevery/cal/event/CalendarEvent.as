@@ -88,12 +88,17 @@ package com.hevery.cal.event
 				titleField.setTextFormat(_renderer.timeFormat, 0, titleText.length);
 				titleField.setTextFormat(_renderer.titleFormat, titleText.length, titleField.text.length);
 				textField.setTextFormat(_renderer.textFormat);
+				toolTip = titleField.text + "\n" + textField.text;
+				invalidateDisplayList();
 			}
 		}
 		
 		protected override function createChildren():void {
 			titleField.tabEnabled = true;
 			textField.wordWrap = true;
+			
+			titleField.selectable = false;
+			textField.selectable = false;
 			
 			addChild(titleField);
 			addChild(textField);
