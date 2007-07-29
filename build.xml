@@ -1,18 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<project name="ant-googlecode" default="upload">
+<project name="ant-googlecode" default="buildSWC">
 	
-	<property file="build.properties"/>
+	<property file="${user.home}/build.properties"/>
 	
-	<!-- Google Code upload properties that vary from person to person.
-	     These should be set in build.properties, which is not checked
-	     in to the source code repository.
-	     
-	     The build.properties.example file provides a template for setting
-	     your own properties.  Make a copy called build.properties and
-	     edit that. This build script will then pick up those properties,
-	     which will not be committed with the rest of the files (which
-	     means you won't be committing your password into the repository!)
-	  -->
 	<property name="gc.username" value="username not set"/>
 	<property name="gc.password" value="password not set"/>
 
@@ -24,4 +14,15 @@
 			      targetfilename="galery.swf"
 				  summary="galery.swf" />
 	</target>
+	
+	<!-- ================================= 
+          target: buildSWC              
+         ================================= -->
+    <target name="buildSWC">
+	    <taskdef resource="flexTasks.tasks" classpath="lib/flexTasks.jar" />
+    	<compc output="bin/Calendar.swc" include-classes="com.hevery.cal.Calendar">
+    	    <source-path path-element="src"/>            
+    	    <include-file name="com/hevery/cal/calendar.css" path="src/com/hevery/cal/calendar.css"/>            
+    	</compc>  
+    </target>
 </project>
