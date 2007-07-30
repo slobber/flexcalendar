@@ -8,3 +8,15 @@
    cornerRadius: 8;
    borderThickness: 2;
 }
+
+.DayChrome {
+	backgroundColor: #AAAAAA;
+}
+
+.ThisMonth {
+	backgroundColor: #AAAAAA;
+}
+
+.NotThisMonth {
+	backgroundColor: #EEEEEE;
+}

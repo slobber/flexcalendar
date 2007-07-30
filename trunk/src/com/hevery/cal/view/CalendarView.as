@@ -92,7 +92,7 @@ package com.hevery.cal.view
 		
 		public function get endDate():Date { return new Date(date.time + duration); } 
 
-		private var visibleEvents:Dictionary = new Dictionary();
+		internal var visibleEvents:Dictionary = new Dictionary();
 		
 		protected override function commitProperties():void {
 			if (_rendererFactoryChanged) {

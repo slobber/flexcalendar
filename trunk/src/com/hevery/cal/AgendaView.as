@@ -34,7 +34,6 @@ package com.hevery.cal
 			label = "Agenda";
 			setStyle("horizontalGap", 0);
 			
-			view.height = 24 * 50;
 			view.percentWidth = 100;
 			view.rendererFactory = AgendaViewRenderer;
 			
