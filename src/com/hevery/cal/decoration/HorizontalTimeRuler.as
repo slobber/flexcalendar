@@ -11,6 +11,7 @@ package com.hevery.cal.decoration
 	import mx.controls.Label;
 	import mx.core.FlexSprite;
 	import mx.core.UIComponent;
+	import mx.formatters.DateFormatter;
 
 	[Bindable]
 	public class HorizontalTimeRuler extends UIComponent {
@@ -28,9 +29,12 @@ package com.hevery.cal.decoration
 		public function get duration():Number { return _duration; };
 		public function set duration(value:Number):void { UIProperty.setValue(this, "duration", value);};
 
+		public var dateFormatter:DateFormatter = new DateFormatter();
+
 		private var backgroundRenderer:HorizontalBackgroundRenderer = new HorizontalBackgroundRenderer();
 		private var labels:ArrayCollection = new ArrayCollection();
 		private var labelsValid:Boolean = false;
+		private var labelWidth:int = 50;
 		
 		private function get pixelsPerMilisecond():Number {return width / duration;}
 		private function get midnightOffset():Number {return _startDate.time - DateUtil.trimToDay(_startDate).time;}
@@ -39,6 +43,7 @@ package com.hevery.cal.decoration
 			height = 20;
 			percentWidth = 100;
 			backgroundRenderer.showLines = false;
+			dateFormatter.formatString = "M/D/YY"
 		}
 		
 		override protected function createChildren():void {
@@ -94,7 +99,6 @@ package com.hevery.cal.decoration
 		
 		protected function updateHourLabels(width:Number, height:Number):void {
 			var numberOfLabels:int = 24;
-			var labelWidth:int = 50;
 			var dayWidth:Number = DateUtil.DAY * pixelsPerMilisecond;
 			while(dayWidth < numberOfLabels * labelWidth) {
 				numberOfLabels /= 2;
@@ -138,6 +142,45 @@ package com.hevery.cal.decoration
 		}
 		
 		protected function updateDateLabels(width:Number, height:Number):void {
+			var dayWidth:Number = DateUtil.DAY * pixelsPerMilisecond;
+			var daysPerLabel:int;
+			var time:Number;
+			if (1 * dayWidth > labelWidth) {
+				daysPerLabel = 1;
+				time = DateUtil.trimToDay(_startDate).time - DateUtil.DAY;
+			} else if (7 * dayWidth > labelWidth) { 
+				daysPerLabel = 7;
+				time = DateUtil.trimToWeek(_startDate).time - DateUtil.WEEK;
+			} else {
+				daysPerLabel = 28;
+				time = DateUtil.trimToMonth(_startDate).time - DateUtil.MONTH;
+			}
+			
+			var newLabels:ArrayCollection = new ArrayCollection();
+			
+			while(time < _startDate.time + duration + DateUtil.HOUR) {
+				var hour:int = new Date(time).hours;
+				var label:Label;
+				if (labels.length > 0) {
+					label = labels.removeItemAt(0) as Label;
+				} else {
+					label = new Label();
+					addChild(label);
+				}
+				label.text = dateFormatter.format(new Date(time));
+				label.setStyle("textAlign", "center");
+				label.width = labelWidth * 2;
+				label.height = height;
+				label.x = (time - _startDate.time) * pixelsPerMilisecond - labelWidth;
+				label.y = 0;
+					
+				newLabels.addItem(label);
+				time += DateUtil.DAY * daysPerLabel;
+			}
+			for each (var x:* in labels) {
+				removeChild(x);
+			}
+			labels = newLabels;
 		}
 	}
 }

@@ -11,8 +11,8 @@
 <sourceAttachmentPath/>
 </compiler>
 <applications>
-<application path="Galery.mxml"/>
 <application path="CalendarSample.mxml"/>
+<application path="Galery.mxml"/>
 </applications>
 <modules/>
 <buildCSSFiles/>

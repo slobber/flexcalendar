@@ -30,7 +30,7 @@ package com.hevery.cal.view
 			horizontalBackgroundRenderer.drawRuler(g, width, height, midnightOffset, duration, pixelsPerMilisecond);
 		}
 		
-		internal override function layoutEvents(events:ArrayCollection):void {
+		internal override function layoutEvents(events:ArrayCollection, width:Number, height:Number):void {
 			var viewStart:Number = view.date.time;
 			var calDesc:CalendarDescriptor = view.calendarDescriptor;
 			for each (var event:CalendarEvent in events) {

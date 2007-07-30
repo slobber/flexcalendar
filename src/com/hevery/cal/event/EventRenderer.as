@@ -45,7 +45,8 @@ package com.hevery.cal.event
 		}
 		
 		public function measure():void {
-			event.measuredHeight = 16;
+			event.measuredMinHeight = event.measuredHeight = 16;
+			event.measuredMinWidth = event.measuredWidth = 30;
 		}
 		
 	}

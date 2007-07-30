@@ -7,7 +7,7 @@ package com.hevery.cal.event
 	import com.hevery.cal.UIProperty;
 	
 	import flash.text.TextField;
-	import flash.text.TextFormat;
+	import flash.text.TextFieldAutoSize;
 	
 	import mx.core.ClassFactory;
 	import mx.core.FlexSprite;
@@ -90,12 +90,14 @@ package com.hevery.cal.event
 				textField.setTextFormat(_renderer.textFormat);
 				toolTip = titleField.text + "\n" + textField.text;
 				invalidateDisplayList();
+				invalidateSize();
 			}
 		}
 		
 		protected override function createChildren():void {
 			titleField.tabEnabled = true;
 			textField.wordWrap = true;
+			textField.autoSize = TextFieldAutoSize.LEFT;
 			
 			titleField.selectable = false;
 			textField.selectable = false;
