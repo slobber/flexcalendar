@@ -13,6 +13,7 @@ package com.hevery.cal
 	import mx.logging.Log;
 
 
+	[Style(name="backgroundColor", type="Color", inherit="no")]
 	public class DayChrome extends UIComponent
 	{
 		private static const log:ILogger = Log.getLogger("com.hevery.cal.DayChrome");
@@ -43,6 +44,11 @@ package com.hevery.cal
 			invalidateDisplayList();
 		}
 		
+		public function DayChrome() {
+			super();
+			styleName = "DayChrome";
+		}
+		
 		protected override function commitProperties():void {
 			super.commitProperties();
 			if (_titleChanged) {
@@ -60,6 +66,7 @@ package com.hevery.cal
 			super.addChildAt(titleField, 0);
 			clipView.mask = new FlexSprite();
 			clipView.addChild(clipView.mask);
+			titleField.selectable = false;
 		}
 		
 		override public function setActualSize(w:Number, h:Number):void {
@@ -95,7 +102,7 @@ package com.hevery.cal
 				child.setActualSize(childW, childH);
 			}
 			graphics.clear();
-			graphics.beginFill(0xAAAAAA);
+			graphics.beginFill(getStyle("backgroundColor"));
 			graphics.drawRect(0, 0, width, height);
 			log.info("DayChrome.updateDisplayList");
 		}

@@ -8,6 +8,7 @@ package com.hevery.cal
 	import mx.collections.ArrayCollection;
 	import mx.containers.HBox;
 	import mx.controls.VScrollBar;
+	import mx.formatters.DateFormatter;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
 
@@ -21,6 +22,8 @@ package com.hevery.cal
 		private var dayChrome:DayChrome = new DayChrome();
 		private var view:CalendarView = new CalendarView();
 
+		public var dateFormatter:DateFormatter = new DateFormatter();
+		
 		public function set calendarDescriptor(calendarDescriptor:CalendarDescriptor):void {
 			view.calendarDescriptor = calendarDescriptor;
 		}
@@ -33,8 +36,15 @@ package com.hevery.cal
 			view.calendars = calendars;
 		}
 		
+		public function set date(date:Date):void {
+			date = DateUtil.trimToDay(date);
+			dayChrome.title = dateFormatter.format(date);
+			view.date = date;
+		}
+		
 		override protected function createChildren():void {
 			super.createChildren();
+			dateFormatter.formatString = "EEEE MMMMM D, YYYY";
 			
 			label = "Day";
 			setStyle("horizontalGap", 0);
@@ -47,7 +57,6 @@ package com.hevery.cal
 			rulerChrome.verticalScrollBar = scrollBar;
 			rulerChrome.addChild(ruler);
 			
-			dayChrome.title = "Today";
 			dayChrome.percentHeight = 100;
 			dayChrome.percentWidth = 100;
 			dayChrome.verticalScrollBar = scrollBar;
@@ -61,6 +70,8 @@ package com.hevery.cal
 			addChild(rulerChrome);
 			addChild(dayChrome);
 			addChild(scrollBar);
+			
+			date = new Date();
 		}
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {

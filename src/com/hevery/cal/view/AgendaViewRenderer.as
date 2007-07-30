@@ -17,6 +17,15 @@ package com.hevery.cal.view
 			event.rendererFactory = AgendaEventRenderer;
 		}
 		
+		override internal function measure():void {
+			super.measure();
+			var height:Number = 0;
+			for each (var event:CalendarEvent in view.visibleEvents) {
+				height += event.measuredHeight;
+			}
+			view.measuredHeight = height;
+		}
+		
 		internal override function layoutEvents(events:ArrayCollection, width:Number, height:Number):void {
 			log.info("layoutEvents()");
 			var lastY:Number = 0;
