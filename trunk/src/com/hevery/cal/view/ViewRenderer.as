@@ -24,7 +24,10 @@ package com.hevery.cal.view
 		internal function updateEventRenderer(event:CalendarEvent): void {
 		}
 		
-		internal function layoutEvents(events:ArrayCollection):void {
+		internal function layoutEvents(events:ArrayCollection, width:Number, height:Number):void {
+		}
+		
+		internal function measure():void {
 		}
 	}
 }

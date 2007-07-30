@@ -29,7 +29,7 @@ package com.hevery.cal.view
 			background.drawRuler(g, verticalOffset, view.duration * pixelsPerMilisecond, width, height);
 		}
 		
-		internal override function layoutEvents(events:ArrayCollection):void {
+		internal override function layoutEvents(events:ArrayCollection, width:Number, height:Number):void {
 			events.sort = new Sort();
 			events.sort.fields = [ new SortField("y") ];	
 			events.refresh();
@@ -43,7 +43,7 @@ package com.hevery.cal.view
 				event.x = 0;
 				event.y = (eventStart.time - dayStart.time) * pixelsPerMilisecond;
 				event.height = (eventEnd.time - eventStart.time) * pixelsPerMilisecond;
-				event.width = view.width;
+				event.width = width;
 				updateEventRenderer(event);
 				var currentY:int = event.y;
 				

@@ -14,8 +14,10 @@ Author: Misko Hevery <misko@hevery.com>
 			public var selectedTime:Date = new Date();
 			[Bindable]
 			public var scrollSize:Number = DateUtil.DAY;
+			[Bindable]
+			public var multiplier:Number = 10;
 			
-			private var timer:Timer = new Timer(10);
+			private var timer:Timer = new Timer(50);
 			private var lastTick:Number;
 			private var isThumDragging:Boolean = false;
 			
@@ -54,7 +56,7 @@ Author: Misko Hevery <misko@hevery.com>
 		thumbPress="onThumbPress(event.currentTarget as Slider)"
 		thumbRelease="onThumbRelease(event.currentTarget as Slider)"
 		change="onChange(event.currentTarget as Slider)"
-		minimum="{-scrollSize}" maximum="{scrollSize}" value="0"
+		minimum="{-scrollSize * multiplier}" maximum="{scrollSize * multiplier}" value="0"
 		showDataTip="false"
 		labels="['Past', 'Now' , 'Future']" liveDragging="true"
 		/>

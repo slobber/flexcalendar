@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="horizontal" 
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical" 
 	xmlns:decoration="com.hevery.cal.decoration.*" xmlns:text="flash.text.*" 
 	xmlns:cal="com.hevery.cal.*" xmlns:calsample="com.hevery.calsample.*"
 	creationComplete="init()" xmlns:event="com.hevery.cal.event.*" xmlns:view="com.hevery.cal.view.*">
@@ -13,6 +13,9 @@
 	<mx:ArrayCollection id="calendars"/>
 	<mx:Script>
 		<![CDATA[
+			import mx.logging.Log;
+			import mx.logging.LogEventLevel;
+			import com.hevery.TextAreaLineFormatedTarget;
 			import com.hevery.calsample.RandomCalendarGenerator;
 			import com.hevery.cal.view.TimelineViewRenderer;
 			import com.hevery.cal.view.AgendaViewRenderer;
@@ -28,7 +31,17 @@
 			}
 			
 			private function init():void {
+				var target:TextAreaLineFormatedTarget = new TextAreaLineFormatedTarget();
+				target.textArea = logTextArea;
+				target.level = LogEventLevel.ALL;
+				target.includeLevel = true;
+				target.includeCategory = true;
+				target.includeTime = true;
+				target.filters = ["*"];
+				Log.addTarget(target);
+				
 				var generator:RandomCalendarGenerator = new RandomCalendarGenerator();
+				generator.numberOfCalendars = 5;
 				generator.generate();
 				calendars = generator.calendars;
 				events = generator.events;
@@ -36,7 +49,6 @@
 		]]>
 	</mx:Script>
 	
-	<decoration:VerticalTimeRuler height="{height - 100}"/>
 	<mx:Tile width="100%" height="100%">
 		<mx:VBox id="eventBox">
 			<event:CalendarEvent width="100%" height="100" eventData="{event}" calendarDescriptor="{calDescriptor}"/>
@@ -55,18 +67,17 @@
 				date="{DateUtil.trimToDay(new Date())}"
 				calendarDescriptor="{calDescriptor}" events="{events}" calendars="{calendars}"/>
 		</mx:HBox>
-		<view:CalendarView width="100%" height="100%"
+		<view:CalendarView width="200" height="400"
 			date="{DateUtil.trimToDay(new Date())}"
 			rendererFactory="{AgendaViewRenderer}"
 			calendarDescriptor="{calDescriptor}" events="{events}" calendars="{calendars}"/>
-		<mx:VBox width="100%" height="100%">
-			<mx:HBox width="100%">
-				<view:CalendarView  width="100%"
-					date="{timeSlider.selectedTime}" 
-					rendererFactory="{TimelineViewRenderer}"
-					calendarDescriptor="{calDescriptor}" events="{events}" calendars="{calendars}"
-					duration="{timeSliderDuration.value}"/>
-			</mx:HBox>
+		<mx:VBox width="100%" height="100%" verticalGap="0">
+			<decoration:HorizontalTimeRuler startDate="{timelineView.date}" duration="{timelineView.duration}"/>
+			<view:CalendarView id="timelineView" width="100%"
+				date="{timeSlider.selectedTime}" 
+				rendererFactory="{TimelineViewRenderer}"
+				calendarDescriptor="{calDescriptor}" events="{events}" calendars="{calendars}"
+				duration="{timeSliderDuration.value}"/>
 			<mx:Label text="{timeSlider.selectedTime.toUTCString()}"/>
 			<cal:TimelineSlider id="timeSlider" width="100%" height="100%"
 				selectedTime="{DateUtil.trimToDay(new Date())}"/>
@@ -77,4 +88,5 @@
 			rendererFactory="{MonthViewRenderer}"
 			calendarDescriptor="{calDescriptor}" events="{events}" calendars="{calendars}"/>
 	</mx:Tile>
+	<mx:TextArea width="100%" height="100" id="logTextArea"/>
 </mx:Application>

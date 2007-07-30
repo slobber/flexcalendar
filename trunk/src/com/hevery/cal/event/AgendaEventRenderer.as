@@ -2,12 +2,18 @@
 // Author: Misko Hevery <misko@hevery.com>
 package com.hevery.cal.event
 {
+	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
+	
+	import mx.core.UIComponent;
+	import mx.logging.ILogger;
+	import mx.logging.Log;
 	
 	
 	
 	public class AgendaEventRenderer extends EventRenderer
 	{
+		private static const log:ILogger = Log.getLogger("com.hevery.cal.event.AgendaEventRenderer");
 		
 		override internal function get timeFormat():TextFormat { 
 			var format:TextFormat = super.timeFormat;
@@ -40,11 +46,8 @@ package com.hevery.cal.event
 			textField.y = _headerHeight;
 			textField.width = width - 2 * _border - offset;
 			textField.height =  height - _headerHeight;
+			event.measuredHeight = textField.y + textField.textHeight + 10;
 			
-		}
-		
-		public override function measure():void {
-			event.measuredHeight = 70;
 		}
 		
 	}

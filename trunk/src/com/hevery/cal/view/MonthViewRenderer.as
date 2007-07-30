@@ -13,14 +13,14 @@ package com.hevery.cal.view
 			event.rendererFactory = CompactEventRenderer;
 		}
 		
-		internal override function layoutEvents(events:ArrayCollection):void {
+		internal override function layoutEvents(events:ArrayCollection, width:Number, height:Number):void {
 			var lastY:Number = 0;
 			for each (var event:CalendarEvent in events) {
 				updateEventRenderer(event);
 				event.x = 0;
 				event.y = lastY;
-				event.width = view.width;
-				event.height = 16;
+				event.width = width;
+				event.height = event.getExplicitOrMeasuredHeight();
 				lastY += event.height;
 			}
 		}

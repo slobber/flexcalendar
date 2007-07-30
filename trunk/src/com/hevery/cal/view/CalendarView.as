@@ -95,6 +95,13 @@ package com.hevery.cal.view
 		private var visibleEvents:Dictionary = new Dictionary();
 		
 		protected override function commitProperties():void {
+			if (_rendererFactoryChanged) {
+				_rendererFactoryChanged = false;
+				for each (var event:CalendarEvent in events) {
+					_renderer.updateEventRenderer(event);
+				}
+				invalidateSize();
+			}
 			if (_durationChanged) {
 				_durationChanged = false;
 				invalidateDisplayList();
@@ -122,7 +129,6 @@ package com.hevery.cal.view
 			var dayStart:Date = date;
 			var dayEnds:Date = new Date(date.time + duration);
 			var newVisibleEvents:Dictionary = new Dictionary();
-			var eventList:ArrayCollection = new ArrayCollection();
 			for each (var event:* in events) {
 				var eventStart:Date = _calendarDescriptor.getEventStart(event);
 				var eventEnd:Date = _calendarDescriptor.getEventEnd(event);
@@ -137,13 +143,13 @@ package com.hevery.cal.view
 				if (eventUI == null) {
 					var startNew:Number = flash.utils.getTimer();
 					eventUI = new CalendarEvent();
+					_renderer.updateEventRenderer(eventUI);
 					newCalendarEventTime += flash.utils.getTimer() - startNew;
 					var startAddChild:Number = flash.utils.getTimer();
 					addChild(eventUI);
 					addChildTime += flash.utils.getTimer() - startAddChild;
 				}
 				newVisibleEvents[event] = eventUI;
-				eventList.addItem(eventUI);
 				eventUI.calendarDescriptor = _calendarDescriptor;
 				eventUI.eventData = event;
 			}
@@ -154,14 +160,28 @@ package com.hevery.cal.view
 			}
 			
 			visibleEvents = newVisibleEvents;
-			_renderer.layoutEvents(eventList);
+			invalidateDisplayList();
+			
 			var end:Number = flash.utils.getTimer();
 			log.info("eventsChanged time= {0} ms.; new CalendarEvent time= {1} ms.; addchild time={2} ms.", end - start, newCalendarEventTime, addChildTime);
+		}
+		
+		private function asCollection(map:Dictionary):ArrayCollection {
+			var list:ArrayCollection = new ArrayCollection();
+			for each (var item:* in map)
+				list.addItem(item);
+			return list;
+		}
+		
+		protected override function measure():void {
+			super.measure();
+			_renderer.measure();
 		}
 		
 		protected override function updateDisplayList(width:Number, height:Number):void {
 			var start:Number = flash.utils.getTimer();
 			super.updateDisplayList(width, height);
+			_renderer.layoutEvents(asCollection(visibleEvents), width, height);
 			
 			var clipMaks:FlexSprite = mask as FlexSprite;
 			clipMaks.graphics.clear();

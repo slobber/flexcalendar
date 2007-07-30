@@ -12,6 +12,15 @@ package com.hevery.cal
 		public static const WEEK:Number = 7 * DAY;
 		public static const MONTH:Number = 31 * DAY;
 		
+		public static function trimToMonth(date:Date):Date {
+			return new Date(date.fullYear, date.month);
+		}
+		
+		public static function trimToWeek(date:Date):Date {
+			var trim:Date = trimToDay(date);
+			return new Date(trim.time - trim.day * DAY);
+		}
+		
 		public static function trimToDay(date:Date):Date {
 			return new Date(date.fullYear, date.month, date.date);
 		}
