@@ -2,6 +2,7 @@
 // Author: Misko Hevery <misko@hevery.com>
 package com.hevery.cal
 {
+	import com.hevery.cal.decoration.CalendarLabels;
 	import com.hevery.cal.decoration.HorizontalTimeRuler;
 	import com.hevery.cal.view.CalendarView;
 	import com.hevery.cal.view.TimelineViewRenderer;
@@ -9,16 +10,23 @@ package com.hevery.cal
 	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
 	import mx.containers.HBox;
+	import mx.containers.HDividedBox;
 	import mx.containers.VBox;
 	import mx.controls.Spacer;
+	import mx.core.UIComponent;
 
 	public class TimelineView extends VBox
 	{
 		
+		private var rulerSpacer:Spacer = new Spacer();
+		private var calendarLabels:CalendarLabels = new CalendarLabels();
+		
 		private var ruler:HorizontalTimeRuler = new HorizontalTimeRuler();
 		private var view:CalendarView = new CalendarView();
+		
+		// Lower Sliders
 		private var sliders:HBox = new HBox();
-		private var spacer:Spacer = new Spacer();
+		private var sliderSpacer:Spacer = new Spacer();
 		private var timeSlider:TimelineSlider = new TimelineSlider();
 		private var durationSlider:TimelineDurationSlider = new TimelineDurationSlider();
 
@@ -36,13 +44,14 @@ package com.hevery.cal
 		
 		override protected function createChildren():void {
 			super.createChildren();
-			spacer.percentWidth = 100;
-			sliders.percentWidth = 100;
-			
 			label = "Timeline";
 			setStyle("horizontalGap", 0);
 			setStyle("verticalGap", 0);
 			
+			// Sliders
+			sliderSpacer.percentWidth = 100;
+			sliders.percentWidth = 100;
+						
 			view.percentHeight = 100;
 			view.percentWidth = 100;
 			view.rendererFactory = TimelineViewRenderer;
@@ -57,13 +66,39 @@ package com.hevery.cal
 			
 			ruler.percentWidth = 100;
 			ruler.height = 20;
+			BindingUtils.bindProperty(rulerSpacer, "height", ruler, "height");
 			
-			addChild(ruler);
-			addChild(view);
+			calendarLabels.percentWidth = 100;
+			calendarLabels.percentHeight = 100;
+			calendarLabels.view = view;
+			
+			addChild(hDividedBox(5, vBox(rulerSpacer, calendarLabels), vBox(ruler, view)));
 			addChild(sliders);
-			sliders.addChild(spacer);
+			
+			sliders.addChild(sliderSpacer);
 			sliders.addChild(timeSlider);
 			sliders.addChild(durationSlider);
+		}
+		
+		private function hDividedBox(split:int, comp1:UIComponent, comp2:UIComponent):HDividedBox {
+			var box:HDividedBox = new HDividedBox();
+			box.percentHeight = 100;
+			box.percentWidth = 100;
+			box.addChild(comp1);
+			box.addChild(comp2);
+			comp1.percentWidth = split;
+			comp2.percentWidth = 100 - split;
+			return box;
+		}
+		
+		private function vBox(comp1:UIComponent, comp2:UIComponent):VBox {
+			var box:VBox = new VBox();
+			box.percentHeight = 100;
+			box.percentWidth = 100;
+			box.setStyle("verticalGap", 0);
+			box.addChild(comp1);
+			box.addChild(comp2);
+			return box;
 		}
 	}
 }

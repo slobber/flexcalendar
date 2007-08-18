@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox 
+	xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:decoration="com.hevery.cal.decoration.*" 
+	xmlns:view="com.hevery.cal.view.*"
+	verticalGap="0"
+	verticalScrollPolicy="off"
+	horizontalScrollPolicy="off">
+	<mx:Script>
+		<![CDATA[
+			import com.hevery.cal.view.CalendarView;
+			
+			[Bindable]
+			public var view:CalendarView;
+		]]>
+	</mx:Script>
+	<mx:Repeater id="calendarRepeater" dataProvider="{view.calendars}">
+		<decoration:CalendarLabel
+			width="100%" height="{view.calendarVisualSize}"
+			calendarDescriptor="{view.calendarDescriptor}" calendarData="{calendarRepeater.currentItem}"/>
+	</mx:Repeater>
+</mx:VBox>

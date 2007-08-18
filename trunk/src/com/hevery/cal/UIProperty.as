@@ -8,6 +8,7 @@ package com.hevery.cal
 	import mx.core.UIComponent;
 	import mx.collections.ArrayCollection;
 	import mx.events.CollectionEvent;
+	import flash.events.Event;
 	
 	public class UIProperty
 	{
@@ -33,7 +34,9 @@ package com.hevery.cal
 			if (onPropertyCollectionChangeListener !=null && oldValue is ArrayCollection)
 				(oldValue as ArrayCollection).removeEventListener(CollectionEvent.COLLECTION_CHANGE, onPropertyCollectionChangeListener);
 
-			uiComponent.setProp(_property, value); 
+			uiComponent.setProp(_property, value);
+			if (uiComponent is IEventDispatcher)
+				IEventDispatcher(uiComponent).dispatchEvent(new Event(property + "Changed"));
 
 			if (onPropertyChangeListener != null && value is IEventDispatcher)
 				(value as IEventDispatcher).addEventListener(PropertyChangeEvent.PROPERTY_CHANGE, onPropertyChangeListener);

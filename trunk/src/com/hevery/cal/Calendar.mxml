@@ -19,7 +19,8 @@ Author: Misko Hevery <misko@hevery.com>
 	<mx:TabNavigator width="100%" height="100%">
 		<cal:TimelineView width="100%" height="100%"
 			calendarDescriptor="{calendarDescriptor}"
-			events="{events}" calendars="{calendars}"/>
+			events="{events}" calendars="{calendars}" 
+			paddingLeft="3" paddingTop="3" paddingRight="2"/>
 		<cal:DayView width="100%" height="100%"
 			calendarDescriptor="{calendarDescriptor}"
 			events="{events}" calendars="{calendars}"/>

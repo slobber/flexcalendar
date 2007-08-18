@@ -42,10 +42,6 @@ package com.hevery.cal.decoration
 			}
 		}
 		
-		public override function setActualSize(w:Number, h:Number):void {
-			super.setActualSize(w, h);
-		}
-		
 		protected override function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
 			super.updateDisplayList(unscaledWidth, unscaledHeight);
 			var color:uint = _calendarDescriptor.getCalendarColor(_calendarData);
@@ -63,10 +59,8 @@ package com.hevery.cal.decoration
 			this[_property] = value; 
 			try {
 				this[_propertyChanged] = true;
-				invalidateProperties();
-			} catch (e:Error) {
-				invalidateDisplayList();
-			}
+			} catch (e:Error) {}
+			invalidateProperties();
 		}
 	}
 }

@@ -15,7 +15,7 @@ Author: Misko Hevery <misko@hevery.com>
 			[Bindable]
 			public var scrollSize:Number = DateUtil.DAY;
 			[Bindable]
-			public var multiplier:Number = 10;
+			public var multiplier:Number = 1;
 			
 			private var timer:Timer = new Timer(50);
 			private var lastTick:Number;
