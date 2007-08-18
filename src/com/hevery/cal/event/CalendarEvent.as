@@ -85,8 +85,10 @@ package com.hevery.cal.event
 				var titleText:String = timeText;
 				titleField.text = titleText + "\t" + _calendarDescriptor.getEventTitle(_eventData);
 				textField.text = _calendarDescriptor.getEventDescription(_eventData);
-				titleField.setTextFormat(_renderer.timeFormat, 0, titleText.length);
-				titleField.setTextFormat(_renderer.titleFormat, titleText.length, titleField.text.length);
+				if (titleText.length>0){
+					titleField.setTextFormat(_renderer.timeFormat, 0, titleText.length);
+					titleField.setTextFormat(_renderer.titleFormat, titleText.length, titleField.text.length);
+				}
 				textField.setTextFormat(_renderer.textFormat);
 				toolTip = titleField.text + "\n" + textField.text;
 				invalidateDisplayList();

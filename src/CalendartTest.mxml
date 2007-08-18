@@ -5,12 +5,14 @@
 	<mx:Script>
 		<![CDATA[
 			import com.hevery.cal.DateUtilTest;
+			import com.hevery.cal.CacheTest;
 			import flexunit.framework.TestSuite;
 			
 			private function onCreationComplete():void
 			{
 				var tests:TestSuite = new TestSuite();
 				tests.addTestSuite(DateUtilTest);
+				tests.addTestSuite(CacheTest);
 				
 				testRunner.test = tests;
 				testRunner.startTest();

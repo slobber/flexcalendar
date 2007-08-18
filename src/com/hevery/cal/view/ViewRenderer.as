@@ -29,5 +29,8 @@ package com.hevery.cal.view
 		
 		internal function measure():void {
 		}
+		
+		internal function setActualSize(w:Number, h:Number):void {
+		}
 	}
 }

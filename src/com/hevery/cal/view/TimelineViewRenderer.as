@@ -45,8 +45,15 @@ package com.hevery.cal.view
 		}
 		
 		override internal function updateDisplayList(g:Graphics, width:Number, height:Number):void {
-			if (view != null && view.calendars != null)
-				view.height = view.calendars.length * view.calendarVisualSize;
+		}
+		
+		override internal function measure():void {
+			super.measure();
+		}
+		
+		override internal function setActualSize(w:Number, h:Number):void {
+			super.setActualSize(w, h);
+			view.calendarVisualSize = h / view.calendars.length;
 		}
 	}
 }

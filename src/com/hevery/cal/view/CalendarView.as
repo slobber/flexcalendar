@@ -2,13 +2,12 @@
 // Author: Misko Hevery <misko@hevery.com>
 package com.hevery.cal.view
 {
+	import com.hevery.cal.Cache;
 	import com.hevery.cal.CalendarDescriptor;
 	import com.hevery.cal.DateUtil;
 	import com.hevery.cal.NullCalendarDescriptor;
 	import com.hevery.cal.UIProperty;
 	import com.hevery.cal.event.CalendarEvent;
-	
-	import flash.utils.Dictionary;
 	
 	import mx.collections.ArrayCollection;
 	import mx.core.ClassFactory;
@@ -29,6 +28,22 @@ package com.hevery.cal.view
 		
 		public function CalendarView() {
 			rendererFactory = DayViewRenderer;
+			visibleEvents.factory = function (event:*):CalendarEvent {
+					var eventUI:CalendarEvent = new CalendarEvent();
+					eventUI.calendarDescriptor = calendarDescriptor;
+					eventUI.eventData = event;
+					addChild(eventUI);
+					return eventUI;
+				}
+			visibleEvents.activate = function (event:*, eventUI:CalendarEvent):void {
+				eventUI.visible = true;
+				eventUI.eventData = event;
+				//addChild(eventUI);
+			}
+			visibleEvents.deactivate = function (eventUI:CalendarEvent):void {
+				eventUI.visible = false;
+				//removeChild(eventUI);
+			}
 		}
 
 		protected override function createChildren():void {
@@ -75,7 +90,7 @@ package com.hevery.cal.view
 		public function get calendars():ArrayCollection { return _calendars; };
 		public function set calendars(value:ArrayCollection):void { UIProperty.setValue(this, "calendars", value);};
 		
-		private var _calendarVisualSize:Number = 50;
+		private var _calendarVisualSize:Number = 100;
 		private var _calendarVisualSizeChanged:Boolean = false;
 		public function get calendarVisualSize():Number { return _calendarVisualSize; };
 		public function set calendarVisualSize(value:Number):void { UIProperty.setValue(this, "calendarVisualSize", value); };
@@ -92,7 +107,7 @@ package com.hevery.cal.view
 		
 		public function get endDate():Date { return new Date(date.time + duration); } 
 
-		internal var visibleEvents:Dictionary = new Dictionary();
+		internal var visibleEvents:Cache = new Cache();
 		
 		protected override function commitProperties():void {
 			if (_rendererFactoryChanged) {
@@ -123,54 +138,21 @@ package com.hevery.cal.view
 		}
 		
 		private function eventsChanged():void {
-			var start:Number = flash.utils.getTimer();
-			var newCalendarEventTime:Number = 0;
-			var addChildTime:Number = 0;
 			var dayStart:Date = date;
 			var dayEnds:Date = new Date(date.time + duration);
-			var newVisibleEvents:Dictionary = new Dictionary();
+			var visibleEvents:ArrayCollection = new ArrayCollection();
+
+			invalidateDisplayList();
+
 			for each (var event:* in events) {
 				var eventStart:Date = _calendarDescriptor.getEventStart(event);
 				var eventEnd:Date = _calendarDescriptor.getEventEnd(event);
-				if (!DateUtil.timeBlocksOverlap(eventStart, eventEnd, dayStart, dayEnds))
-					continue;
 				var calendar:* = _calendarDescriptor.getCalendar(event);
-				if (!calendars.contains(calendar))
-					continue;
-					
-				var eventUI:CalendarEvent = visibleEvents[event];
-				delete visibleEvents[event];
-				if (eventUI == null) {
-					var startNew:Number = flash.utils.getTimer();
-					eventUI = new CalendarEvent();
-					_renderer.updateEventRenderer(eventUI);
-					newCalendarEventTime += flash.utils.getTimer() - startNew;
-					var startAddChild:Number = flash.utils.getTimer();
-					addChild(eventUI);
-					addChildTime += flash.utils.getTimer() - startAddChild;
-				}
-				newVisibleEvents[event] = eventUI;
-				eventUI.calendarDescriptor = _calendarDescriptor;
-				eventUI.eventData = event;
+				if (DateUtil.timeBlocksOverlap(eventStart, eventEnd, dayStart, dayEnds) && calendars.contains(calendar))
+					visibleEvents.addItem(event);
 			}
 			
-			// Remove any extra events.
-			for each (var uiEvent:CalendarEvent in visibleEvents) {
-				removeChild(uiEvent);
-			}
-			
-			visibleEvents = newVisibleEvents;
-			invalidateDisplayList();
-			
-			var end:Number = flash.utils.getTimer();
-			log.info("eventsChanged time= {0} ms.; new CalendarEvent time= {1} ms.; addchild time={2} ms.", end - start, newCalendarEventTime, addChildTime);
-		}
-		
-		private function asCollection(map:Dictionary):ArrayCollection {
-			var list:ArrayCollection = new ArrayCollection();
-			for each (var item:* in map)
-				list.addItem(item);
-			return list;
+			this.visibleEvents.activateKeys(visibleEvents.source);
 		}
 		
 		protected override function measure():void {
@@ -178,10 +160,14 @@ package com.hevery.cal.view
 			_renderer.measure();
 		}
 		
+		public override function setActualSize(w:Number, h:Number):void {
+			super.setActualSize(w, h);
+			_renderer.setActualSize(w, h);
+		}
+		
 		protected override function updateDisplayList(width:Number, height:Number):void {
-			var start:Number = flash.utils.getTimer();
 			super.updateDisplayList(width, height);
-			_renderer.layoutEvents(asCollection(visibleEvents), width, height);
+			_renderer.layoutEvents(visibleEvents.activeCollection, width, height);
 			
 			var clipMaks:FlexSprite = mask as FlexSprite;
 			clipMaks.graphics.clear();
@@ -192,8 +178,6 @@ package com.hevery.cal.view
 			
 			_renderer.drawBackground(graphics, width, height, 0);
 			_renderer.updateDisplayList(graphics, width, height);
-			var end:Number = flash.utils.getTimer();
-			log.info("updateDisplayList time= {0} ms.", end - start);
 		}
 
 	}
