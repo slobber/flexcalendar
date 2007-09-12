@@ -32,6 +32,7 @@ package com.hevery.cal.view
 					var eventUI:CalendarEvent = new CalendarEvent();
 					eventUI.calendarDescriptor = calendarDescriptor;
 					eventUI.eventData = event;
+					_renderer.updateEventRenderer(eventUI);
 					addChild(eventUI);
 					return eventUI;
 				}
@@ -42,6 +43,7 @@ package com.hevery.cal.view
 			}
 			visibleEvents.deactivate = function (eventUI:CalendarEvent):void {
 				eventUI.visible = false;
+				eventUI.eventData = null;
 				//removeChild(eventUI);
 			}
 		}

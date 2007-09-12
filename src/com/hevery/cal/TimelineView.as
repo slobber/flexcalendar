@@ -9,6 +9,7 @@ package com.hevery.cal
 	
 	import mx.binding.utils.BindingUtils;
 	import mx.collections.ArrayCollection;
+	import mx.containers.Box;
 	import mx.containers.HBox;
 	import mx.containers.HDividedBox;
 	import mx.containers.VBox;
@@ -72,7 +73,7 @@ package com.hevery.cal
 			calendarLabels.percentHeight = 100;
 			calendarLabels.view = view;
 			
-			addChild(hDividedBox(5, vBox(rulerSpacer, calendarLabels), vBox(ruler, view)));
+			addChild(hBox(5, vBox(rulerSpacer, calendarLabels), vBox(ruler, view)));
 			addChild(sliders);
 			
 			sliders.addChild(sliderSpacer);
@@ -80,8 +81,9 @@ package com.hevery.cal
 			sliders.addChild(durationSlider);
 		}
 		
-		private function hDividedBox(split:int, comp1:UIComponent, comp2:UIComponent):HDividedBox {
-			var box:HDividedBox = new HDividedBox();
+		private function hBox(split:int, comp1:UIComponent, comp2:UIComponent):Box {
+			var box:Box = new HBox();
+			box.setStyle("horizontalGap", 0);
 			box.percentHeight = 100;
 			box.percentWidth = 100;
 			box.addChild(comp1);

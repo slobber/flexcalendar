@@ -53,7 +53,8 @@ package com.hevery.cal.view
 		
 		override internal function setActualSize(w:Number, h:Number):void {
 			super.setActualSize(w, h);
-			view.calendarVisualSize = h / view.calendars.length;
+			var count:int = view.calendars.length;
+			view.calendarVisualSize = count == 0 ? 0 : h / count;
 		}
 	}
 }
