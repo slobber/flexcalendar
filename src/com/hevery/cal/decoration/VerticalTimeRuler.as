@@ -14,7 +14,7 @@ package com.hevery.cal.decoration
 	public class VerticalTimeRuler extends UIComponent {
 		public const WIDTH:int = 50;
 		
-		public var pixelsPerMilisecond:Number = 50 / DateUtil.HOUR;
+		public var pixelsPerMilisecond:Number = 50.0 / DateUtil.HOUR;
 		
 		public var showBackground:Boolean;
 		public var backgroundRenderer:VerticalBackgroundRenderer = new VerticalBackgroundRenderer();
