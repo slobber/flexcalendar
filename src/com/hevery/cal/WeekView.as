@@ -1,7 +1,21 @@
-// Copyright 2007
-// Author: Misko Hevery <misko@hevery.com>
+/*
+ Copyright 2007 Misko Hevery <misko@hevery.com>
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package com.hevery.cal
 {
+	import com.hevery.cal.DateUtil;
 	import com.hevery.cal.decoration.VerticalTimeRuler;
 	import com.hevery.cal.view.CalendarView;
 	
@@ -20,6 +34,8 @@ package com.hevery.cal
 		private var views:ArrayCollection = new ArrayCollection();
 		
 		public var dateFormatter:DateFormatter = new DateFormatter();
+		
+		public var hourHeight:Number = 50;
 
 		public function set calendarDescriptor(calendarDescriptor:CalendarDescriptor):void {
 			for each (var view:CalendarView in views)
@@ -48,7 +64,9 @@ package com.hevery.cal
 			}
 		}
 		
-		public function WeekView() {
+		public function WeekView(hrHeight:Number=50) {
+			hourHeight = hrHeight;
+			ruler.pixelsPerMilisecond = hourHeight / DateUtil.HOUR;
 			for (var i:int = 0; i < 7 ; i++) {
 				views.addItem(new CalendarView());
 				chromes.addItem(new DayChrome());
@@ -66,7 +84,7 @@ package com.hevery.cal
 			rulerChrome.addChild(ruler);
 			addChild(rulerChrome);
 
-			ruler.height = 24 * 50;
+			ruler.height = 24 * hourHeight;
 			
 			label = "Week";
 			setStyle("horizontalGap", 0);
@@ -80,7 +98,7 @@ package com.hevery.cal
 				chrome.verticalScrollBar = scrollBar;
 				
 				var view:CalendarView = views.getItemAt(i) as CalendarView;
-				view.height = 24 * 50;
+				view.height = 24 * hourHeight;
 				view.percentWidth = 100;
 				
 				chrome.addChild(view);
@@ -97,8 +115,13 @@ package com.hevery.cal
 		
 		private function updateScrollSize():void {
 			var viewHeight:Number = chromes.getItemAt(0).viewHeight;
-			var actualHeight:Number = 24 * 50;
-			scrollBar.setScrollProperties(viewHeight, 0, actualHeight - viewHeight, viewHeight);
+			var actualHeight:Number = 24 * hourHeight;
+			if (actualHeight > viewHeight) {
+				scrollBar.visible = true;
+				scrollBar.setScrollProperties(viewHeight, 0, actualHeight - viewHeight, viewHeight);
+			} else {
+				scrollBar.visible = false;
+			}
 		}
 	}
 }
