@@ -1,5 +1,18 @@
-// Copyright 2007
-// Author: Misko Hevery <misko@hevery.com>
+/*
+ Copyright 2007 Misko Hevery <misko@hevery.com>
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+*/
 package com.hevery.cal.decoration
 {
 	import flash.display.GradientType;
@@ -22,7 +35,9 @@ package com.hevery.cal.decoration
 			g.beginGradientFill(GradientType.LINEAR, colors, alphas(ALPHA), positn, matrix );
 			g.drawRect(0, 0, width, height);
 			g.endFill();
-			
+
+			var skip30MinLine:Boolean = dayHeight/24/2 <= 10;
+						
 			for (var hour:int = 0; hour < 24; hour++) {
 				var y:int = hour * dayHeight / 24 - yOffset; 
 				if (0 < y && y < height) {
@@ -30,9 +45,9 @@ package com.hevery.cal.decoration
 					g.moveTo(0, y);
 					g.lineTo(width, y);
 				}
-				
+			
 				y = y + dayHeight/24 / 2;
-				if (0 < y && y < height) {
+				if (0 < y && y < height && !skip30MinLine) {
 					g.lineStyle(1, 0, .25);
 					g.moveTo(0, y);
 					g.lineTo(width, y);
