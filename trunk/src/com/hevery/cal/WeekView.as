@@ -71,11 +71,11 @@ package com.hevery.cal
 				views.addItem(new CalendarView());
 				chromes.addItem(new DayChrome());
 			}
+			dateFormatter.formatString = "EEEE MMM D";
 		}
 		
 		override protected function createChildren():void {
 			super.createChildren();
-			dateFormatter.formatString = "EEEE MMM D";
 			
 			rulerChrome.title = "";
 			rulerChrome.percentHeight = 100;
@@ -105,7 +105,7 @@ package com.hevery.cal
 				addChild(chrome);
 			}
 			addChild(scrollBar);
-			date = new Date();
+//			date = new Date();
 		}
 		
 		override protected function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void {
