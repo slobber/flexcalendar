@@ -39,10 +39,12 @@ package com.hevery.cal.view
 		
 		private static const log:ILogger = Log.getLogger("com.hevery.cal.view.CalendarView");
 		
+		public var calendarEventClass:Class = CalendarEvent;
+		
 		public function CalendarView() {
 			rendererFactory = DayViewRenderer;
 			visibleEvents.factory = function (event:*):CalendarEvent {
-					var eventUI:CalendarEvent = new CalendarEvent();
+					var eventUI:CalendarEvent = new calendarEventClass();
 					eventUI.calendarDescriptor = calendarDescriptor;
 					eventUI.eventData = event;
 					_renderer.updateEventRenderer(eventUI);

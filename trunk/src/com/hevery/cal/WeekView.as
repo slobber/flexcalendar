@@ -17,6 +17,7 @@ package com.hevery.cal
 {
 	import com.hevery.cal.DateUtil;
 	import com.hevery.cal.decoration.VerticalTimeRuler;
+	import com.hevery.cal.event.CalendarEvent;
 	import com.hevery.cal.view.CalendarView;
 	
 	import mx.collections.ArrayCollection;
@@ -36,6 +37,19 @@ package com.hevery.cal
 		public var dateFormatter:DateFormatter = new DateFormatter();
 		
 		public var hourHeight:Number = 50;
+		
+		private var _calendarEventClass:Class = CalendarEvent;
+		
+		public function get calendarEventClass():Class {
+			return _calendarEventClass;
+		}
+		
+		public function set calendarEventClass(cev:Class):void {
+			_calendarEventClass = cev;
+			for each (var view:CalendarView in views) {
+				view.calendarEventClass = _calendarEventClass;
+			}
+		}
 
 		public function set calendarDescriptor(calendarDescriptor:CalendarDescriptor):void {
 			for each (var view:CalendarView in views)
