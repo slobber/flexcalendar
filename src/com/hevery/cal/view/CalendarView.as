@@ -189,7 +189,7 @@ package com.hevery.cal.view
 		private function eventsChanged():void {
 			var dayStart:Date = date;
 			var dayEnds:Date = new Date(date.time + duration);
-			var visibleEvents:Array = new Array();
+			var visibleEvents:ArrayCollection = new ArrayCollection();
 
 			invalidateDisplayList();
 
@@ -198,10 +198,10 @@ package com.hevery.cal.view
 				var eventEnd:Date = _calendarDescriptor.getEventEnd(event);
 				var calendar:* = _calendarDescriptor.getCalendar(event);
 				if (DateUtil.timeBlocksOverlap(eventStart, eventEnd, dayStart, dayEnds) && calendars.contains(calendar))
-					visibleEvents.push(event);
+					visibleEvents.addItem(event);
 			}
 			
-			this.visibleEvents.activateKeys(visibleEvents);
+			this.visibleEvents.activateKeys(visibleEvents.source);
 		}
 		
 		protected override function measure():void {
