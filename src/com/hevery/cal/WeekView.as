@@ -15,7 +15,6 @@
 */
 package com.hevery.cal
 {
-	import com.hevery.cal.DateUtil;
 	import com.hevery.cal.decoration.VerticalTimeRuler;
 	import com.hevery.cal.event.CalendarEvent;
 	import com.hevery.cal.view.CalendarView;
@@ -59,6 +58,18 @@ package com.hevery.cal
 		public function set events(events:ArrayCollection):void {
 			for each (var view:CalendarView in views)
 				view.events = events;
+		}
+		
+		public function addEvent(event:*):void {
+			for each (var view:CalendarView in views) {
+				view.addEvent(event);
+			}
+		}
+		
+		public function removeEvent(event:*):void {
+			for each (var view:CalendarView in views) {
+				view.removeEvent(event);
+			}
 		}
 		
 		public function set calendars(calendars:ArrayCollection):void {

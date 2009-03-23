@@ -42,6 +42,26 @@ package com.hevery.cal
 			return values;
 		}
 		
+		public function addKey(key:*):void {
+			var value:*;
+			if (nonactivePool.length > 0) {
+				value = nonactivePool.removeItemAt(0);
+				activate(key, value);
+			} else {
+				value = factory(key);
+			}
+			activeCache[key] = value;
+		}
+		
+		public function removeKey(key:*):void {
+			var value:* = activeCache[key];
+			if (value != null) {
+				delete activeCache[key];
+				deactivate(value);
+				nonactivePool.addItem(value);
+			}
+		}
+		
 		private function reuseExistingKeys(keys:Array, values:Array, oldActiveCache:Dictionary):ArrayCollection {
 			// First pass reuse anything where keys match.
 			var missing:ArrayCollection = new ArrayCollection();

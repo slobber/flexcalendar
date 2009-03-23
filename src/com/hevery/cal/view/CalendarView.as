@@ -62,7 +62,7 @@ package com.hevery.cal.view
 				//removeChild(eventUI);
 			}
 		}
-
+		
 		protected override function createChildren():void {
 			super.createChildren();
 			mask = new FlexSprite();
@@ -154,10 +154,42 @@ package com.hevery.cal.view
 			}
 		}
 		
+		public function addEvent(event:*):void {
+			// add event but don't trigger modification event
+			if (events.source.indexOf(event) == -1) {
+				events.source.push(event);
+			}
+			var dayStart:Date = date;
+			var dayEnds:Date = new Date(date.time + duration);
+			
+			if (DateUtil.timeBlocksOverlap(_calendarDescriptor.getEventStart(event),
+										   _calendarDescriptor.getEventEnd(event),
+										   dayStart, dayEnds)) {
+				this.visibleEvents.addKey(event);
+				invalidateDisplayList();
+			}
+		}
+		
+		public function removeEvent(event:*):void {
+			var idx:int = events.source.indexOf(event);
+			if (idx != -1) {
+				events.source.splice(idx, 1);
+			}
+			var dayStart:Date = date;
+			var dayEnds:Date = new Date(date.time + duration);
+			
+			if (DateUtil.timeBlocksOverlap(_calendarDescriptor.getEventStart(event),
+										   _calendarDescriptor.getEventEnd(event),
+										   dayStart, dayEnds)) {
+				this.visibleEvents.removeKey(event);
+				invalidateDisplayList();
+			}
+		}
+
 		private function eventsChanged():void {
 			var dayStart:Date = date;
 			var dayEnds:Date = new Date(date.time + duration);
-			var visibleEvents:ArrayCollection = new ArrayCollection();
+			var visibleEvents:Array = new Array();
 
 			invalidateDisplayList();
 
@@ -166,10 +198,10 @@ package com.hevery.cal.view
 				var eventEnd:Date = _calendarDescriptor.getEventEnd(event);
 				var calendar:* = _calendarDescriptor.getCalendar(event);
 				if (DateUtil.timeBlocksOverlap(eventStart, eventEnd, dayStart, dayEnds) && calendars.contains(calendar))
-					visibleEvents.addItem(event);
+					visibleEvents.push(event);
 			}
 			
-			this.visibleEvents.activateKeys(visibleEvents.source);
+			this.visibleEvents.activateKeys(visibleEvents);
 		}
 		
 		protected override function measure():void {
