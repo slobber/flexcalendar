@@ -29,10 +29,12 @@ package com.hevery.cal.decoration
 		}
 		public static const positn:Array = [       0,      5*H,      6*H,       7*H,     12*H,     18*H,     19*H,     20*H,     24*H];
 		
+		public var myColors:Array = colors;
+		
 		public function drawRuler(g:Graphics, yOffset:Number, dayHeight:Number, width:Number, height:Number):void {
 			var matrix:Matrix = new Matrix();
 			matrix.createGradientBox(width, dayHeight, Math.PI / 2, 0, -yOffset);
-			g.beginGradientFill(GradientType.LINEAR, colors, alphas(ALPHA), positn, matrix );
+			g.beginGradientFill(GradientType.LINEAR, myColors, alphas(ALPHA), positn, matrix );
 			g.drawRect(0, 0, width, height);
 			g.endFill();
 

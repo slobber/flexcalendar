@@ -27,11 +27,11 @@ package com.hevery.cal
 	public class WeekView extends HBox
 	{
 		
-		private var rulerChrome:DayChrome = new DayChrome();
-		private var ruler:VerticalTimeRuler = new VerticalTimeRuler();
-		private var scrollBar:VScrollBar = new VScrollBar();
-		private var chromes:ArrayCollection = new ArrayCollection();
-		private var views:ArrayCollection = new ArrayCollection();
+		protected var rulerChrome:DayChrome = new DayChrome();
+		protected var ruler:VerticalTimeRuler = new VerticalTimeRuler();
+		protected var scrollBar:VScrollBar = new VScrollBar();
+		protected var chromes:ArrayCollection = new ArrayCollection();
+		protected var views:ArrayCollection = new ArrayCollection();
 		
 		public var dateFormatter:DateFormatter = new DateFormatter();
 		
