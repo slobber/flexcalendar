@@ -28,7 +28,7 @@ package com.hevery.cal.view
 	
 	public class DayViewRenderer extends ViewRenderer
 	{
-		private var background:VerticalBackgroundRenderer = new VerticalBackgroundRenderer();
+		public var background:VerticalBackgroundRenderer = new VerticalBackgroundRenderer();
 		
 		internal override function updateEventRenderer(event:CalendarEvent): void {
 			event.rendererFactory = BlockEventRenderer;
