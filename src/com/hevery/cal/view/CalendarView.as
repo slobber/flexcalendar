@@ -129,7 +129,8 @@ package com.hevery.cal.view
 		protected override function commitProperties():void {
 			if (_rendererFactoryChanged) {
 				_rendererFactoryChanged = false;
-				for each (var event:CalendarEvent in events) {
+//				for each (var event:CalendarEvent in events) {
+				for each (var event:CalendarEvent in visibleEvents.activeCollection) {
 					_renderer.updateEventRenderer(event);
 				}
 				invalidateSize();
