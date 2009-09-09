@@ -25,6 +25,7 @@ package com.hevery.cal.view
 	import mx.collections.ArrayCollection;
 	import mx.collections.Sort;
 	import mx.collections.SortField;
+	import com.hevery.cal.DateUtil;
 	
 	public class DayViewRenderer extends ViewRenderer
 	{
@@ -54,8 +55,22 @@ package com.hevery.cal.view
 				var eventStart:Date = calDesc.getEventStart(event.eventData);
 				var eventEnd:Date = calDesc.getEventEnd(event.eventData);
 				event.x = 0;
-				event.y = (eventStart.time - dayStart.time) * pixelsPerMilisecond;
-				event.height = (eventEnd.time - eventStart.time) * pixelsPerMilisecond;
+				var startBeforeEnd:Boolean = eventStart.time < eventEnd.time;
+				if (startBeforeEnd) {
+					event.y = (eventStart.time - dayStart.time) * pixelsPerMilisecond;
+					event.height = (eventEnd.time - eventStart.time) * pixelsPerMilisecond;
+				} else {
+					// wrap around
+					if (eventStart.day == dayStart.day) {
+						// the start day
+						event.y = (eventStart.time - dayStart.time) * pixelsPerMilisecond;
+						event.height = (dayStart.time + DateUtil.DAY - eventStart.time) * pixelsPerMilisecond;
+					} else {
+						// the wrapped day
+						event.y = -60;			// position start out of range of mask to hide title/description
+						event.height = (eventEnd.time - dayStart.time) * pixelsPerMilisecond + 60;
+					}
+				}
 				event.width = width;
 				updateEventRenderer(event);
 				var currentY:int = event.y;

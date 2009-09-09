@@ -37,6 +37,17 @@ package com.hevery.cal
 		
 		public var hourHeight:Number = 50;
 		
+		private var _use24HourClock:Boolean = false;
+		
+		public function get use24HourClock():Boolean { return _use24HourClock; }
+		
+		public function set use24HourClock(u24:Boolean):void {
+			_use24HourClock = u24;
+			ruler = new VerticalTimeRuler(_use24HourClock);
+			ruler.pixelsPerMilisecond = hourHeight / DateUtil.HOUR;			
+			invalidateDisplayList();
+		}
+		
 		private var _calendarEventClass:Class = CalendarEvent;
 		
 		public function get calendarEventClass():Class {

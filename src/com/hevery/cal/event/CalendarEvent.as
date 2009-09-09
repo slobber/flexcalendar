@@ -40,7 +40,7 @@ package com.hevery.cal.event
 	
 		internal var titleField:TextField = new TextField();
 		internal var textField:TextField = new TextField();
-		private var timeFormater:DateFormatter = new DateFormatter();
+		protected var timeFormater:DateFormatter = new DateFormatter();
 		
 		private var _renderer:EventRenderer;
 		private var _rendererFactory:IFactory;
