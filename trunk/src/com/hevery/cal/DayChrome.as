@@ -24,9 +24,12 @@ package com.hevery.cal
 	import mx.events.ScrollEvent;
 	import mx.logging.ILogger;
 	import mx.logging.Log;
+	import flash.text.TextFormat;
 
 
 	[Style(name="backgroundColor", type="Color", inherit="no")]
+	[Style(name="textColor", type="Color", inherit="no")]
+	[Style(name="font", type="String", inherit="no")] 
 	public class DayChrome extends UIComponent
 	{
 		private static const log:ILogger = Log.getLogger("com.hevery.cal.DayChrome");
@@ -80,6 +83,23 @@ package com.hevery.cal
 			clipView.mask = new FlexSprite();
 			clipView.addChild(clipView.mask);
 			titleField.selectable = false;
+			titleField.textColor = getStyle("textColor");
+			var font:String = getStyle("font");
+			var tf:TextFormat;
+			if (font != null && font != "") {
+				tf = new TextFormat();
+				tf.font = font;
+			}
+			var fontSize:int = getStyle("fontSize");
+			if (fontSize != 0) {
+				if (tf == null) {
+					tf = new TextFormat();
+				}
+				tf.size = fontSize;
+			}
+			if (tf != null) {
+				titleField.defaultTextFormat = tf;
+			}
 		}
 		
 		override public function setActualSize(w:Number, h:Number):void {

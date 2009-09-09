@@ -43,12 +43,18 @@ package com.hevery.cal
 		}
 		
 		public static function timeBlocksOverlap(start1:Date, end1:Date, start2:Date, end2:Date):Boolean {
+			var res:Boolean;
 			if (start1 == null || start2 == null || end1 == null || end2 == null)
-				return false;
+				res = false;
+			else if (start1.time > end1.time) 
+				// week wraps around
+				res = start1.time >= start2.time && start1.time < end2.time ||
+					  end1.time > start2.time && end1.time <= end2.time;	
 			else if (start1.time < start2.time)
-				return end1.time > start2.time;
+				res = end1.time > start2.time;
 			else
-				return start1.time < end2.time;
+				res =  start1.time < end2.time;
+			return res;
 		}
 	}
 }
