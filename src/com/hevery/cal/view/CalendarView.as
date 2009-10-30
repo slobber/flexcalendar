@@ -203,6 +203,20 @@ package com.hevery.cal.view
 			}
 			
 			this.visibleEvents.activateKeys(visibleEvents.source);
+
+			// ensure smaller events are on top		
+			var eventChildren:Array = new Array();	
+			for (var i:int = 0; i<numChildren; i++) {
+				if (getChildAt(i) is CalendarEvent) {
+					eventChildren.push(getChildAt(i));
+				}
+			}
+			var idx:int = 1;
+			eventChildren.sortOn("duration", Array.NUMERIC | Array.DESCENDING);
+			
+			for each(var ce:CalendarEvent in eventChildren) {
+				this.setChildIndex(ce, idx++);
+			}
 		}
 		
 		protected override function measure():void {
