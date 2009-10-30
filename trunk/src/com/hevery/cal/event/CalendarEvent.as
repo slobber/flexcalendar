@@ -75,6 +75,21 @@ package com.hevery.cal.event
 			var start:Date = _calendarDescriptor.getEventStart(_eventData);
 			return timeFormater.format(start);			
 		}
+		
+		public function get duration():int {
+			var start:Date = _calendarDescriptor.getEventStart(_eventData);
+			var end:Date = _calendarDescriptor.getEventEnd(_eventData);
+			var d:int;
+			if (start != null && end != null) {
+				d = end.time - start.time;
+				if (d >= 0) {
+					return d;
+				} else {
+					return d;
+				}
+			}
+			return 0;
+		}
 
 		public function CalendarEvent() {
 			super();
